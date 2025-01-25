@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contract Info</title>
+</head>
+<body>
+    <h1>Enter Contract ID to Get Information</h1>
+
+    <!-- Form to enter Contract ID -->
+    <form action="/get_contract_info" method="post">
+        <label for="contract_id">Contract ID:</label>
+        <input type="text" id="contract_id" name="contract_id" required>
+        <button type="submit">Get Contract Info</button>
+    </form>
+
+    {% if contract_data %}
+        <h2>Contract Information:</h2>
+        <table border="1">
+            <tr>
+                <th>Contract No</th>
+                <th>Customer Name</th>
+                <th>No of Instalments</th>
+                <th>Due</th>
+                <th>Received</th>
+                <th>Balance</th>
+                <th>Instalment Amount</th>
+            </tr>
+            <tr>
+                <td>{{ contract_data['Contract No'] }}</td>
+                <td>{{ contract_data['Customer Name'] }}</td>
+                <td>{{ contract_data['No of Instalments'] }}</td>
+                <td>{{ contract_data['Due'] }}</td>
+                <td>{{ contract_data['Received'] }}</td>
+                <td>{{ contract_data['Balance'] }}</td>
+                <td>{{ contract_data['Instalment Amount'] }}</td>
+            </tr>
+        </table>
+    {% endif %}
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+</body>
+</html>

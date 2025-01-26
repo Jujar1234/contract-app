@@ -2,10 +2,10 @@ import os
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 import glob
 import PyPDF2
 import re
-import pandas as pd
 from flask import Flask, render_template, request
 
 # Initialize Flask app
@@ -15,16 +15,23 @@ app = Flask(__name__)
 def get_contract_data(contract_id):
     base_url = f"https://commonwebapp.mahindrafs.com/SOA_Mobile_CLMS/DownloadSOA_crm.aspx?userid=5100000016&contractno={contract_id}"
 
-    # Step 2: Open URL and wait for 20 seconds for the page to load
-    service = Service(r"C:\Program Files (x86)\WebDriver\chromedriver.exe")  # Update path if necessary
-    driver = webdriver.Chrome(service=service)
+    # Set up Selenium WebDriver with headless Chrome
+    chrome_options = Options()
+    chrome_options.add_argument('--headless')  # Headless mode
+    chrome_options.add_argument('--disable-gpu')
+    chrome_options.add_argument('--no-sandbox')
+    chrome_options.add_argument('--disable-dev-shm-usage')
+
+    # Chromedriver path for Linux environment (Render)
+    service = Service("/usr/bin/chromedriver")  # Default location for Render
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(base_url)
 
     # Wait for 20 seconds after opening the URL
     time.sleep(20)
 
     # Step 3: Download PDF
-    downloads_folder = r"C:\Users\HP\Downloads"  # Update if your downloads folder is different
+    downloads_folder = "/tmp"  # Use /tmp for Render's file storage
     file_pattern = f"SOA_{contract_id}_*.pdf"  # Pattern for the downloaded file
     file_path = glob.glob(os.path.join(downloads_folder, file_pattern))
 

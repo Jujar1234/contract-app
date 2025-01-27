@@ -15,22 +15,22 @@ app = Flask(__name__)
 def get_contract_data(contract_id):
     base_url = f"https://commonwebapp.mahindrafs.com/SOA_Mobile_CLMS/DownloadSOA_crm.aspx?userid=5100000016&contractno={contract_id}"
 
-    # Set up Selenium WebDriver with headless Chrome
+    # Set up Selenium WebDriver with headless Chrome for Render
     chrome_options = Options()
-    chrome_options.add_argument('--headless')  # Headless mode
+    chrome_options.add_argument('--headless')  # Headless mode (no GUI)
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
 
-    # Chromedriver path for Linux environment (Render)
-    service = Service("/usr/bin/chromedriver")  # Default location for Render
+    # Chromedriver path for Render (Linux)
+    service = Service("/usr/bin/chromedriver")
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(base_url)
 
-    # Wait for 20 seconds after opening the URL
+    # Wait for 20 seconds to ensure the page loads
     time.sleep(20)
 
-    # Step 3: Download PDF
+    # Step 3: Check for the downloaded PDF in Render's temporary folder
     downloads_folder = "/tmp"  # Use /tmp for Render's file storage
     file_pattern = f"SOA_{contract_id}_*.pdf"  # Pattern for the downloaded file
     file_path = glob.glob(os.path.join(downloads_folder, file_pattern))
@@ -80,7 +80,7 @@ def get_contract_data(contract_id):
         "Instalment Amount": instalment_amount
     }
 
-    # Close browser after extracting data
+    # Close the browser after extracting data
     driver.quit()
     return data
 
